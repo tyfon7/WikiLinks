@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Reflection;
 using EFT.Quests;
 using EFT.UI;
@@ -72,24 +71,11 @@ public static class QuestPatches
                 var rect = openWikiButton.RectTransform();
                 rect.pivot = new(1, 1);
                 rect.anchorMin = rect.anchorMax = new(1, 1);
-
-                openWikiButton.transform.localPosition = new(openWikiButton.transform.localPosition.x, openWikiButton.transform.localPosition.y - 10, 0);
             }
 
             // I know this isn't how you translate things, but it's good enough
             var text = $"{"OPEN".Localized()} WIKI";
-
-            openWikiButton.Show(text, text, CacheResourcesPopAbstractClass.Pop<Sprite>("Characteristics/Icons/Inspect"), () =>
-            {
-                var locale = Settings.UseLocalizedLinks.Value ? LocaleManagerClass.LocaleManagerClass.String_0 : "en";
-
-                var itemName = LocaleManagerClass.LocaleManagerClass.method_7(quest.Id + " Name", locale);
-                var wikiName = itemName.Replace(' ', '_');
-                var localePath = locale == "en" ? string.Empty : $"{locale}/";
-
-                Application.OpenURL($"https://escapefromtarkov.fandom.com/{localePath}wiki/{wikiName}");
-            },
-            () => { });
+            openWikiButton.Show(text, text, CacheResourcesPopAbstractClass.Pop<Sprite>("Characteristics/Icons/Inspect"), () => Url.OpenWiki(quest.Id), () => { });
 
             __instance.AddDisposable(openWikiButton.Close);
         }

@@ -46,18 +46,7 @@ public static class ContextMenuPatches
             }
 
             var text = $"{"OPEN".Localized()} WIKI";
-
-            __result.Dictionary_0["OPEN WIKI"] = new("OPEN WIKI", text, () =>
-            {
-                var locale = Settings.UseLocalizedLinks.Value ? LocaleManagerClass.LocaleManagerClass.String_0 : "en";
-
-                var itemName = LocaleManagerClass.LocaleManagerClass.method_7(item.TemplateId + " Name", locale);
-                var wikiName = itemName.Replace(' ', '_');
-                var localePath = locale == "en" ? string.Empty : $"{locale}/";
-
-                Application.OpenURL($"https://escapefromtarkov.fandom.com/{localePath}wiki/{wikiName}");
-            },
-            CacheResourcesPopAbstractClass.Pop<Sprite>("Characteristics/Icons/Inspect"));
+            __result.Dictionary_0["OPEN WIKI"] = new("OPEN WIKI", text, () => Url.OpenWiki(item.TemplateId), CacheResourcesPopAbstractClass.Pop<Sprite>("Characteristics/Icons/Inspect"));
         }
     }
 
