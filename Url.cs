@@ -21,6 +21,7 @@ public static class Url
     public static string WikiEncode(string input)
     {
         return Regex.Replace(input, "<[^>]+>", string.Empty) // Remove xml-style tags (added by mods like ItemInfo)
+            .Replace("[K] ", string.Empty) // KappaMarker mod
             .Replace(' ', '_') // Replace spaces with underscore
             .Replace("#", string.Empty); // Remove # character
     }
