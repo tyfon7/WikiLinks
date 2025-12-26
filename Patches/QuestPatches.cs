@@ -27,8 +27,9 @@ public static class QuestPatches
         [PatchPostfix]
         public static void Postfix(UIElement __instance, QuestClass quest)
         {
-            var parent = __instance.transform.Find("Center/Scrollview/Content/CenterBlock/DescriptionBlock");
-            CreateButton(quest, __instance, parent);
+            var header = __instance.transform.Find("HeaderLine");
+            var description = __instance.transform.Find("Center/Scrollview/Content/CenterBlock/DescriptionBlock");
+            CreateButton(quest, __instance, new(-20, -header.RectTransform().sizeDelta.y - description.RectTransform().sizeDelta.y - 40));
         }
     }
 
@@ -47,16 +48,20 @@ public static class QuestPatches
                 return;
             }
 
-            var parent = __instance.transform.Find("Description");
-            CreateButton(quest, __instance, parent);
+            // There's some delayed shenanigans that resize the description, so wait until that's done to position the button
+            __instance.WaitOneFrame(() =>
+            {
+                var description = __instance.transform.Find("Description");
+                CreateButton(quest, __instance, new(-20, -description.RectTransform().sizeDelta.y - 25));
+            });
         }
     }
 
-    private static void CreateButton(QuestClass quest, UIElement element, Transform parent)
+    private static void CreateButton(QuestClass quest, UIElement parent, Vector2 offset)
     {
         SimpleContextMenuButton openWikiButton = null;
 
-        var existing = parent.Find("OpenWikiButton");
+        var existing = parent.transform.Find("OpenWikiButton");
         if (existing != null)
         {
             openWikiButton = existing.GetComponent<SimpleContextMenuButton>();
@@ -78,7 +83,7 @@ public static class QuestPatches
             // Find a button to clone
             ButtonTemplate ??= ItemUiContext.Instance.ContextMenu.transform.Find("InteractionButtonsContainer/Button Template")?.GetComponent<SimpleContextMenuButton>();
 
-            openWikiButton = UnityEngine.Object.Instantiate<SimpleContextMenuButton>(ButtonTemplate, parent);
+            openWikiButton = UnityEngine.Object.Instantiate<SimpleContextMenuButton>(ButtonTemplate, parent.transform);
             openWikiButton.name = "OpenWikiButton";
 
             // This is needed or the inner elements all collapse
@@ -90,15 +95,15 @@ public static class QuestPatches
 
             // Position on bottom right
             var rect = openWikiButton.RectTransform();
-            rect.pivot = new(1, 0);
-            rect.anchorMin = rect.anchorMax = new(1, 0);
-            rect.anchoredPosition = new(-20, -30);
+            rect.pivot = new(1, 1);
+            rect.anchorMin = rect.anchorMax = new(1, 1);
+            rect.anchoredPosition = offset;
         }
 
         // I know this isn't how you translate things, but it's good enough
         var text = $"{"OPEN".Localized()} WIKI";
         openWikiButton.Show(text, text, CacheResourcesPopAbstractClass.Pop<Sprite>("Characteristics/Icons/Inspect"), () => Url.OpenWiki(quest.Id), () => { });
 
-        element.AddDisposable(openWikiButton.Close);
+        parent.AddDisposable(openWikiButton.Close);
     }
 }
