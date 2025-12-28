@@ -91,12 +91,7 @@ public static class QuestPatches
 
         if (!Settings.EnableQuestButton.Value || quest is DailyQuest)
         {
-            if (openWikiButton != null)
-            {
-                openWikiButton.Dispose();
-                Object.Destroy(openWikiButton);
-            }
-
+            openWikiButton.Close();
             return null;
         }
 
@@ -105,7 +100,7 @@ public static class QuestPatches
             // Find a button to clone
             ButtonTemplate ??= ItemUiContext.Instance.ContextMenu.transform.Find("InteractionButtonsContainer/Button Template")?.GetComponent<SimpleContextMenuButton>();
 
-            openWikiButton = UnityEngine.Object.Instantiate<SimpleContextMenuButton>(ButtonTemplate, parent);
+            openWikiButton = UnityEngine.Object.Instantiate(ButtonTemplate, parent);
             openWikiButton.name = "OpenWikiButton";
 
             // This is needed or the inner elements all collapse
