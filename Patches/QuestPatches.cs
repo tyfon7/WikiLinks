@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 namespace WikiLinks;
 
+using DailyQuest = GClass3996;
+
 public static class QuestPatches
 {
     private static SimpleContextMenuButton ButtonTemplate;
@@ -17,6 +19,7 @@ public static class QuestPatches
         new NotesTaskDescriptionShortPatch().Enable();
     }
 
+    // Traders/task screen
     public class NotesTaskDescriptionPatch : ModulePatch
     {
         protected override MethodBase GetTargetMethod()
@@ -29,10 +32,22 @@ public static class QuestPatches
         {
             var header = __instance.transform.Find("HeaderLine");
             var description = __instance.transform.Find("Center/Scrollview/Content/CenterBlock/DescriptionBlock");
-            CreateButton(quest, __instance, new(-20, -header.RectTransform().sizeDelta.y - description.RectTransform().sizeDelta.y - 40));
+            var button = CreateButton(quest, __instance, __instance.transform);
+
+            if (button == null)
+            {
+                return;
+            }
+
+            // Position on bottom right
+            var rect = button.RectTransform();
+            rect.pivot = new(1, 1);
+            rect.anchorMin = rect.anchorMax = new(1, 1);
+            rect.anchoredPosition = new(-20, -header.RectTransform().sizeDelta.y - description.RectTransform().sizeDelta.y - 40);
         }
     }
 
+    // Character/Tasks screen
     public class NotesTaskDescriptionShortPatch : ModulePatch
     {
         protected override MethodBase GetTargetMethod()
@@ -48,26 +63,33 @@ public static class QuestPatches
                 return;
             }
 
-            // There's some delayed shenanigans that resize the description, so wait until that's done to position the button
-            __instance.WaitOneFrame(() =>
+            var description = __instance.transform.Find("ObjectivesBlock");
+            var button = CreateButton(quest, __instance, description);
+
+            if (button == null)
             {
-                var description = __instance.transform.Find("Description");
-                CreateButton(quest, __instance, new(-20, -description.RectTransform().sizeDelta.y - 25));
-            });
+                return;
+            }
+
+            // Position on top right of objectives
+            var rect = button.RectTransform();
+            rect.pivot = new(1, 1);
+            rect.anchorMin = rect.anchorMax = new(1, 1);
+            rect.anchoredPosition = new(-20, 0);
         }
     }
 
-    private static void CreateButton(QuestClass quest, UIElement parent, Vector2 offset)
+    private static SimpleContextMenuButton CreateButton(QuestClass quest, UIElement owner, Transform parent)
     {
         SimpleContextMenuButton openWikiButton = null;
 
-        var existing = parent.transform.Find("OpenWikiButton");
+        var existing = owner.transform.Find("OpenWikiButton");
         if (existing != null)
         {
             openWikiButton = existing.GetComponent<SimpleContextMenuButton>();
         }
 
-        if (!Settings.EnableQuestButton.Value)
+        if (!Settings.EnableQuestButton.Value || quest is DailyQuest)
         {
             if (openWikiButton != null)
             {
@@ -75,7 +97,7 @@ public static class QuestPatches
                 Object.Destroy(openWikiButton);
             }
 
-            return;
+            return null;
         }
 
         if (openWikiButton == null)
@@ -83,7 +105,7 @@ public static class QuestPatches
             // Find a button to clone
             ButtonTemplate ??= ItemUiContext.Instance.ContextMenu.transform.Find("InteractionButtonsContainer/Button Template")?.GetComponent<SimpleContextMenuButton>();
 
-            openWikiButton = UnityEngine.Object.Instantiate<SimpleContextMenuButton>(ButtonTemplate, parent.transform);
+            openWikiButton = UnityEngine.Object.Instantiate<SimpleContextMenuButton>(ButtonTemplate, parent);
             openWikiButton.name = "OpenWikiButton";
 
             // This is needed or the inner elements all collapse
@@ -92,18 +114,16 @@ public static class QuestPatches
 
             var layout = openWikiButton.GetComponent<LayoutElement>();
             layout.ignoreLayout = true;
-
-            // Position on bottom right
-            var rect = openWikiButton.RectTransform();
-            rect.pivot = new(1, 1);
-            rect.anchorMin = rect.anchorMax = new(1, 1);
-            rect.anchoredPosition = offset;
         }
 
         // I know this isn't how you translate things, but it's good enough
         var text = $"{"OPEN".Localized()} WIKI";
+
+        openWikiButton.Close(); // otherwise the clicks will pile up
         openWikiButton.Show(text, text, CacheResourcesPopAbstractClass.Pop<Sprite>("Characteristics/Icons/Inspect"), () => Url.OpenWiki(quest.Id), () => { });
 
-        parent.AddDisposable(openWikiButton.Close);
+        owner.AddDisposable(openWikiButton.Close);
+
+        return openWikiButton;
     }
 }
