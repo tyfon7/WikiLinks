@@ -4,7 +4,7 @@
     <TargetFramework>net471</TargetFramework>
     <AssemblyName>Tyfon.WikiLinks</AssemblyName>
     <Description>SPT Wiki Links</Description>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <Configurations>Debug;Release</Configurations>
@@ -12,6 +12,12 @@
 
   <PropertyGroup>
     <SPTPath>..\..\..\..\SPT\4.0</SPTPath>
+    <AssemblySearchPaths>
+      $(SPTPath)\EscapeFromTarkov_Data\Managed;
+      $(SPTPath)\BepInEx\plugins\spt;
+      $(FikaPath);
+      $(AssemblySearchPaths)
+    </AssemblySearchPaths>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,48 +30,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="spt-common">
-      <HintPath>$(SPTPath)\BepInEx\plugins\spt\spt-common.dll</HintPath>
-    </Reference>
-    <Reference Include="spt-reflection">
-      <HintPath>$(SPTPath)\BepInEx\plugins\spt\spt-reflection.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>$(SPTPath)\EscapeFromTarkov_Data\Managed\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Comfort">
-      <HintPath>$(SPTPath)\EscapeFromTarkov_Data\Managed\Comfort.dll</HintPath>
-    </Reference>
-    <Reference Include="Comfort.Unity">
-      <HintPath>$(SPTPath)\EscapeFromTarkov_Data\Managed\Comfort.Unity.dll</HintPath>
-    </Reference>
-    <Reference Include="ItemComponent.Types">
-      <HintPath>$(SPTPath)\EscapeFromTarkov_Data\Managed\ItemComponent.Types.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>$(SPTPath)\EscapeFromTarkov_Data\Managed\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Sirenix.Serialization">
-      <HintPath>$(SPTPath)\EscapeFromTarkov_Data\Managed\Sirenix.Serialization.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>$(SPTPath)\EscapeFromTarkov_Data\Managed\Unity.TextMeshPro.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>$(SPTPath)\EscapeFromTarkov_Data\Managed\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(SPTPath)\EscapeFromTarkov_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>$(SPTPath)\EscapeFromTarkov_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>$(SPTPath)\EscapeFromTarkov_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>$(SPTPath)\EscapeFromTarkov_Data\Managed\UnityEngine.UI.dll</HintPath>
-    </Reference>
+    <Reference Include="spt-common" />
+    <Reference Include="spt-reflection" />
+    <Reference Include="Assembly-CSharp" />
+    <Reference Include="Comfort" />
+    <Reference Include="Comfort.Unity" />
+    <Reference Include="ItemComponent.Types" />
+    <Reference Include="Newtonsoft.Json" />
+    <Reference Include="Sirenix.Serialization" />
+    <Reference Include="Unity.TextMeshPro" />
+    <Reference Include="UnityEngine" />
+    <Reference Include="UnityEngine.CoreModule" />
+    <Reference Include="UnityEngine.InputLegacyModule" />
+    <Reference Include="UnityEngine.TextRenderingModule" />
+    <Reference Include="UnityEngine.UI" />
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Core" Version="5.*" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
