@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 
 namespace WikiLinks;
 
+[UsedImplicitly]
 public class RedirectRegistry
 {
     private static readonly Dictionary<MongoID, string> Redirects = new();
