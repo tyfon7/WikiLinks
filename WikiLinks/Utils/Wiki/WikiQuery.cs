@@ -17,7 +17,7 @@ internal static class WikiQuery
     {
         var locale = Plugin.UseLocalizedLinks!.Value ? EFT.LocalizationManager.Instance.Culture : "en";
 
-        if (Plugin.Redirects.TryGetValue(id, out var redirect))
+        if (RedirectRegistry.TryGetValue(id, out var redirect))
         {
             Application.OpenURL(redirect);
             return;

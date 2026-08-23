@@ -13,7 +13,6 @@ namespace WikiLinks;
 [BepInPlugin("com.tyfon.wikilinks", "WikiLinks", "1.0.0")]
 public class Plugin : BaseUnityPlugin
 {
-    internal static readonly Dictionary<MongoID, string> Redirects = new();
     
     public static ConfigEntry<bool>? EnableContextMenu;
     public static ConfigEntry<bool>? EnableQuestButton;
@@ -52,9 +51,5 @@ public class Plugin : BaseUnityPlugin
         new NTDShowPatch().Enable();
     }
 
-    [UsedImplicitly]
-    public bool AddWikiRedirect(string id, string link)
-    {
-        return Redirects.TryAdd(id, link);
-    }
+
 }
