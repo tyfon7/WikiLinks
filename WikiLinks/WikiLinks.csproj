@@ -5,8 +5,7 @@
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
-
-
+    
     <ItemGroup>
         <Reference Include="0Harmony">
             <HintPath>..\..\..\BepInEx\core\0Harmony.dll</HintPath>

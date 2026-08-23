@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Configuration;
-using EFT;
-using JetBrains.Annotations;
 using WikiLinks.Patches.InteractionButtonsContainerPatches;
 using WikiLinks.Patches.ItemUiContextPatches;
 using WikiLinks.Patches.NotesTaskDescriptionPatches;
@@ -13,7 +10,6 @@ namespace WikiLinks;
 [BepInPlugin("com.tyfon.wikilinks", "WikiLinks", "1.0.0")]
 public class Plugin : BaseUnityPlugin
 {
-    
     public static ConfigEntry<bool>? EnableContextMenu;
     public static ConfigEntry<bool>? EnableQuestButton;
     public static ConfigEntry<bool>? UseLocalizedLinks;
@@ -50,6 +46,4 @@ public class Plugin : BaseUnityPlugin
         new QOVShowPatch().Enable();
         new NTDShowPatch().Enable();
     }
-
-
 }
