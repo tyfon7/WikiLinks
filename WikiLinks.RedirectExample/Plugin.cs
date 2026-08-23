@@ -3,7 +3,7 @@
 namespace WikiLinks.RedirectExample;
 
 [BepInDependency("com.tyfon.wikilinks")]
-[BepInPlugin( "com.tyfon.wikilinks.redirectexample", "WikiLinksRedirectExample", "1.0.0" )]
+[BepInPlugin("com.tyfon.wikilinks.redirectexample", "WikiLinksRedirectExample", "1.0.0")]
 public class Plugin : BaseUnityPlugin
 {
     private void Awake()
