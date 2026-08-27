@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using EFT;
@@ -56,7 +57,10 @@ public static class ContextMenuPatches
     {
         protected override MethodBase GetTargetMethod()
         {
-            return AccessTools.Method(typeof(InteractionButtonsContainer), "method_1");
+            return AccessTools.Method(
+                typeof(InteractionButtonsContainer),
+                nameof(InteractionButtonsContainer.CreateContextButton),
+                [typeof(string), typeof(string), typeof(SimpleContextMenuButton), typeof(RectTransform), typeof(Sprite), typeof(Action), typeof(Action), typeof(bool), typeof(bool)]);
         }
 
         [PatchPrefix]
