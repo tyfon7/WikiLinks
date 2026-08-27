@@ -20,14 +20,21 @@ public static class Url
 
         var baseUrl = $"https://escapefromtarkov.fandom.com/{localePath}wiki/{wikiName}";
 
-        if (Settings.UseWayback.Value)
+        if (RedirectRegistry.TryGetValue(id, out var redirect))
         {
-            var archiveUrl = await Wayback.GetWaybackUrl(baseUrl);
-            Application.OpenURL(archiveUrl ?? baseUrl);
+            Application.OpenURL(redirect);
         }
         else
         {
-            Application.OpenURL(baseUrl);
+            if (Settings.UseWayback.Value)
+            {
+                var archiveUrl = await Wayback.GetWaybackUrl(baseUrl);
+                Application.OpenURL(archiveUrl ?? baseUrl);
+            }
+            else
+            {
+                Application.OpenURL(baseUrl);
+            }
         }
     }
 
