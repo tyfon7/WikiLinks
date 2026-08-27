@@ -13,7 +13,7 @@ namespace WikiLinks;
 
 public static class QuestPatches
 {
-    private static SimpleContextMenuButton ButtonTemplate;
+    private static ContextMenuButton ButtonTemplate;
 
     public static void Enable()
     {
@@ -103,12 +103,12 @@ public static class QuestPatches
         }
     }
 
-    private static SimpleContextMenuButton GetButton(Transform parent)
+    private static ContextMenuButton GetButton(Transform parent)
     {
         var existing = parent.Find("OpenWikiButton");
         if (existing != null)
         {
-            return existing.GetComponent<SimpleContextMenuButton>();
+            return existing.GetComponent<ContextMenuButton>();
         }
 
         return null;
@@ -116,11 +116,11 @@ public static class QuestPatches
 
     private static SimpleContextMenuButton GetOrCreateButton(Quest quest, UIElement owner, Transform parent)
     {
-        SimpleContextMenuButton button = GetButton(parent);
+        ContextMenuButton button = GetButton(parent);
         if (button == null)
         {
             // Find a button to clone
-            ButtonTemplate ??= ItemUiContext.Instance.ContextMenu.transform.Find("InteractionButtonsContainer/Button Template")?.GetComponent<SimpleContextMenuButton>();
+            ButtonTemplate ??= ItemUiContext.Instance.ContextMenu.transform.Find("InteractionButtonsContainer/Button Template")?.GetComponent<ContextMenuButton>();
 
             button = UnityEngine.Object.Instantiate(ButtonTemplate, parent);
             button.name = "OpenWikiButton";
@@ -134,10 +134,20 @@ public static class QuestPatches
         var text = $"{"OPEN".Localized()} WIKI";
 
         button.Close(); // otherwise the clicks will pile up
-        button.Show(text, text, ResourcesCache.Pop<Sprite>("Characteristics/Icons/Inspect"), () => _ = Url.OpenWiki(quest.Id), () => { });
+        button.Show(text, text, ResourcesCache.Pop<Sprite>("Characteristics/Icons/Inspect"), () => OnClick(button, quest.Id), () => { });
 
         owner.AddDisposable(button.Close);
 
         return button;
+    }
+
+    private static async void OnClick(ContextMenuButton button, string questId)
+    {
+        var originalText = button._text.text;
+        button._text.text = "Loading...".Localized(EStringCase.Upper);
+
+        await Url.OpenWiki(questId);
+
+        button._text.text = originalText;
     }
 }
