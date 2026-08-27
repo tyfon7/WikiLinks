@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace WikiLinks;
@@ -40,7 +39,6 @@ internal class Wayback
 
     internal class ArchivedSnapshots
     {
-        [CanBeNull]
         [JsonProperty("closest")]
         public ClosestSnapshot Closest { get; set; }
     }

@@ -24,17 +24,14 @@ public static class Url
         {
             Application.OpenURL(redirect);
         }
+        else if (Settings.UseWayback.Value)
+        {
+            var archiveUrl = await Wayback.GetWaybackUrl(baseUrl);
+            Application.OpenURL(archiveUrl ?? baseUrl);
+        }
         else
         {
-            if (Settings.UseWayback.Value)
-            {
-                var archiveUrl = await Wayback.GetWaybackUrl(baseUrl);
-                Application.OpenURL(archiveUrl ?? baseUrl);
-            }
-            else
-            {
-                Application.OpenURL(baseUrl);
-            }
+            Application.OpenURL(baseUrl);
         }
     }
 
